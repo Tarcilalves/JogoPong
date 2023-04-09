@@ -1,0 +1,159 @@
+<meta charset="pt-br">
+
+<canvas width="600" height="400"></canvas>
+
+    <script>
+    
+            var tela = document.querySelector('canvas');
+            var pincel = tela.getContext('2d');
+        
+            pincel.fillStyle = 'lightgray';
+            pincel.fillRect(0, 0, 600, 400);
+
+        function desenhaCirculo(x, y, raio) {
+
+            pincel.fillStyle = 'pink';
+            pincel.beginPath();
+            pincel.arc(x, y, raio, 0, 2 * Math.PI);
+            pincel.fill();
+        }
+
+        function limpaTela() { 
+            pincel.clearRect(0, 0, 600, 400); //pincel.clearRect(), o que indicará ao JS que ele deve limpar o retângulo.
+        }
+
+        var raio = 10;
+        var xAleatorio;
+        var yAleatorio;
+        let xBolinha= 300;
+        let yBolinha= 200;
+        
+
+
+        function atualizaTela(maximo) {
+        limpaTela();
+
+        // Atualiza coordenadas com valores aleatórios entre -1 e 1
+        return Math.floor(Math.random() * maximo);
+        }
+        function dispara(evento) {
+
+            var x = evento.pageX - tela.offsetLeft;
+            var y = evento.pageY - tela.offsetTop;
+       
+
+        // Limita coordenadas dentro da área do canvas
+        if (xAleatorio > 600 - raio) {
+            xAleatorio = 600 - raio;
+        } else if (xAleatorio < 0 + raio) {
+            xAleatorio = 0 + raio;
+        }
+        if (yAleatorio > 400 - raio) {
+            yAleatorio = 400 - raio;
+        } else if (yAleatorio < 0 + raio) {
+            yAleatorio = 0 + raio;
+        }
+
+        desenhaCirculo(xAleatorio, yAleatorio, raio);
+    }
+
+        setInterval(atualizaTela, 10);  // tempo de 10ml/s
+
+        /* 
+        
+        
+        function atualizaTela() {
+            limpaTela();
+
+            // gera valores aleatórios para x e y
+            x += (Math.random() * 2 - 1) * maxMovimento;
+            y += (Math.random() * 2 - 1) * maxMovimento;
+
+            // verifica se a bola está dentro dos limites da tela
+            if (x > 600 - raio) {
+                x = 600 - raio;
+            } else if (x < raio) {
+                x = raio;
+            }
+
+            if (y > 400 - raio) {
+                y = 400 - raio;
+            } else if (y < raio) {
+                y = raio;
+            }
+
+            desenhaCirculo(x, y, raio);
+        }
+
+        setInterval(atualizaTela, 10);
+
+
+        */
+
+          /*
+
+         //variáveis da Bolinha
+        var xBolinha= 300;
+        var yBolinha= 200;
+        var diametro= 10;
+
+        function mostraBolinha() {
+            
+            pincel.beginPath();
+            pincel.arc(xBolinha, yBolinha, diametro, 0, 2 * Math.PI);
+            pincel.fillStyle = 'blue';
+            pincel.fill();
+
+        }
+//A função movimentaBolinha() está sendo chamada antes de ser definida. 
+Isso faz com que a função não seja encontrada, gerando um erro e impedindo que a bola se mova.
+
+        mostraBolinha();     
+        movimentaBolinha();
+
+        //movimenta Bolinha
+
+        var velocidadeXBolinha= 6;
+        var velocidadeYBolinha= 6;
+        var raio=diametro/2;
+
+    /* Os condicionais que movimentam a bola estão verificando se a posição atual da bola é maior que a velocidade da bola menos o raio. 
+    Isso não faz sentido e pode fazer com que a bola saia da tela em algumas situações. O correto seria verificar se a bola está saindo 
+    da tela e inverter a direção da bola nesse caso.
+    Os condicionais que movimentam a bola na direção x estão verificando o mesmo valor duas vezes. Isso não tem efeito prático no movimento da bola, mas é um erro de lógica.
+
+Os condicionais que movimentam a bola na direção y estão verificando se a posição atual da bola em x é maior que a velocidade da bola menos o raio. Isso não faz sentido e pode fazer com que a bola saia da tela em algumas situações. O correto seria verificar se a bola está saindo da tela e inverter a direção da bola nesse caso.
+    
+    */
+/*
+        function movimentaBolinha() {
+            limpaTela();
+
+                // gera valores aleatórios para x 
+
+            if(xBolinha > velocidadeXBolinha - raio){
+               
+                xBolinha += (Math.random() * 2 - 1) * - 1;
+            
+            } if(xBolinha > velocidadeXBolinha - raio){
+                xBolinha += (Math.random() * 2 - 1) * + 1;
+
+                 // gera valores aleatórios para x 
+
+            } if(yBolinha > velocidadeYBolinha - raio){
+               
+                yBolinha += (Math.random() * 2 - 1) * - 1;
+            
+            } if(xBolinha > velocidadeYBolinha - raio){
+                yBolinha += (Math.random() * 2 - 1) * + 1;      
+            
+            }
+            
+        }
+
+        setInterval(atualizaTela, 10); */
+    </script>
+
+
+
+</script>

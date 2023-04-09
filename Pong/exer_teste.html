@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id= 'telaBorda'  width="600" height="400"></canvas>
+
+    <script>   
+
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+        var telaBorda = document.getElementById('telaBorda'); 
+        telaBorda.style.border = "solid blue"; 
+        pincel.fillStyle = 'gray';
+        pincel.fillRect(0, 0, 600, 400);
+
+        function limpaTela() { 
+            pincel.clearRect(0, 0, 600, 400);
+        }
+
+        //variáveis da Bolinha
+        var xBolinha= 300;
+        var yBolinha= 200;
+        var diametro= 10;
+
+        //movimenta Bolinha
+
+        var velocidadeXBolinha= 6;
+        var velocidadeYBolinha= 6;
+        var raio=diametro/2;
+
+        //variáveis da Raquete
+        var xRaquete= 5;
+        var yRaquete= 150;
+        var raqueteComprimento= 10;
+        var raqueteAltura= 90;
+
+        //variáveis raquete do oponente
+        var xRaqueteOponente= 585;
+        var yRaqueteOponente= 150;
+
+        colidiu = false;
+
+        function mostraBolinha() {
+            
+            pincel.beginPath();
+            pincel.arc(xBolinha, yBolinha, diametro, 0, 2 * Math.PI);
+            pincel.fillStyle = 'blue';
+            pincel.fill();
+
+        }
+
+        function mostraRaquete(){
+            pincel.beginPath();
+            pincel.rect(xRaqueteOponente, yRaqueteOponente, raqueteComprimento, raqueteAltura);
+            pincel.fillStyle = 'black';
+            pincel.fill();            
+        }       
+        
+        function mostraRaqueteOponente(){
+            pincel.beginPath();
+            pincel.rect(xRaquete, yRaquete, raqueteComprimento, raqueteAltura);
+            pincel.fillStyle = 'black';
+            pincel.fill();            
+        }  
+
+       
+
+        function movimentaBolinha() {
+            limpaTela();
+
+            /*A propriedade .width é usada para definir ou retornar a largura 
+            de um elemento HTML e o mesmo ocorre com .height que retorna a altura
+            de um elemento */
+            
+            if (xBolinha + raio > tela.width || xBolinha - raio < 0) {
+                velocidadeXBolinha = -velocidadeXBolinha;
+            }
+                        
+            if (yBolinha + raio > tela.height || yBolinha - raio < 0) {
+                velocidadeYBolinha = -velocidadeYBolinha;
+            }
+            
+           xBolinha += velocidadeXBolinha;
+           yBolinha += velocidadeYBolinha;
+
+              // verifica colisão com a raquete
+            if (verificaColisaoRaquete(raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio, xRaquete, yRaquete) ||
+                verificaColisaoRaquete(raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio, xRaqueteOponente, yRaqueteOponente)) {
+                velocidadeXBolinha = -velocidadeXBolinha;
+            }
+
+           
+            //chama a função para movimentar a raquete
+            movimentaMinhaRaquete();
+            movimentaRaqueteOponente();           
+            
+            mostraBolinha();
+            mostraRaquete();
+            mostraRaqueteOponente();
+        }
+
+        setInterval(movimentaBolinha, 10);    
+
+        //movimenta Raquete
+        var teclaPressionada = {};
+
+        // verifica a colisão com a borda
+        document.addEventListener('keydown', function(evento) {
+        teclaPressionada[evento.keyCode] = true;
+        });
+
+        document.addEventListener('keyup', function(evento) {
+        delete teclaPressionada[evento.keyCode];
+        });
+
+
+        function movimentaMinhaRaquete() {
+            if (teclaPressionada[38]) { // seta para cima
+                if (yRaquete > 0) { // verifica se a raquete está no topo da tela
+                    yRaquete -= 10;
+                }
+            }
+
+            if (teclaPressionada[40]) { // seta para baixo
+                if (yRaquete + raqueteAltura < tela.height) { // verifica se a raquete está no fundo da tela
+                    yRaquete += 10;
+                }
+            }
+        }
+ 
+
+        // raquete do oponente
+
+        function movimentaRaqueteOponente(){
+            if (teclaPressionada[87]){  // tecla 'W' mover para cima
+                if(yRaqueteOponente > 0){
+                    yRaqueteOponente -= 10;  
+                }
+            }
+
+            if (teclaPressionada[83]){
+                if(yRaqueteOponente + raqueteAltura < tela.height){
+                    yRaqueteOponente += 10; // tecla 'S' mover para baixo
+                }
+            }
+        }
+
+
+        // Colisão com a raquete 
+
+        function verificaColisaoRaquete (raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio, xRaquete, yRaquete) {
+            // coordenadas do retângulo que envolve a raquete
+            var esquerdaRaquete = xRaquete;
+            var direitaRaquete = xRaquete + raqueteComprimento;
+            var topoRaquete = yRaquete;
+            var embaixoRaquete = yRaquete + raqueteAltura;
+
+            // verifica se a posição da bolinha está dentro das coordenadas do retângulo da raquete
+            if (xBolinha + raio > esquerdaRaquete && xBolinha - raio < direitaRaquete && yBolinha + raio > topoRaquete && yBolinha - raio < embaixoRaquete) {
+                return true;
+            } else {
+                return false;
+            }
+
+            // Solucionar a bolinha que fica presa
+
+            var colidiu = false;
+
+            if (xBolinha - raio < xRaquete + comprimento &&
+                yBolinha - raio < yRaquete + altura &&
+                yBolinha + raio > yRaquete) {
+
+                velocidadeXBolinha = -velocidadeXBolinha * 1.1; // adiciona um desvio na velocidade da bola
+                colidiu = true;
+            }
+
+            return colidiu;
+        }
+   
+
+    </script>
+    
+</body>
+</html>
